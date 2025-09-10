@@ -144,9 +144,9 @@ export default function IconPage() {
             <Image
               src={icon.imageUrl}
               alt={icon.name}
-              width={400}
-              height={400}
-              className="w-96 h-96 object-contain"
+              width={500}
+              height={500}
+              className="w-[500px] h-[500px] object-contain"
               unoptimized
               priority
             />
