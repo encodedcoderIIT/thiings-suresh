@@ -1,16 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { Download, ArrowLeft } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { Download, ArrowLeft, Volume2, Share, X, Check } from "lucide-react";
 import { ThiingsIcon } from "@/types";
 import thiingsData from "@/data/thiings_metadata_7000.json";
 
 export default function IconPage() {
   const params = useParams();
+  const router = useRouter();
   const iconId = params.id as string;
+
+  // State management
+  const [isNarrating, setIsNarrating] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   // Find the icon by ID
   const icon = thiingsData.find((item) => item.id === iconId) as
@@ -57,12 +63,82 @@ export default function IconPage() {
     }
   };
 
+  const handleNarrate = () => {
+    if (isNarrating) {
+      speechSynthesis.cancel();
+      setIsNarrating(false);
+    } else {
+      const utterance = new SpeechSynthesisUtterance(icon.description);
+      utterance.onend = () => setIsNarrating(false);
+      utterance.onerror = () => setIsNarrating(false);
+      speechSynthesis.speak(utterance);
+      setIsNarrating(true);
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const url = `${window.location.origin}/icon/${icon.id}`;
+      await navigator.clipboard.writeText(url);
+      setToastMessage(
+        window.innerWidth < 768
+          ? "Shared successfully!"
+          : "URL copied to clipboard!"
+      );
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (error) {
+      console.error("Share failed:", error);
+      setToastMessage("Failed to copy URL");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    }
+  };
+
+  const handleClose = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
+      {/* Desktop Controls */}
+      <div className="hidden md:block absolute top-4 right-4 z-10">
+        <div className="flex gap-2">
+          <button
+            onClick={handleNarrate}
+            className={`w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all shadow-lg ${
+              isNarrating ? "ring-2 ring-blue-500" : ""
+            }`}
+          >
+            <Volume2
+              className={`w-5 h-5 ${
+                isNarrating ? "text-blue-600" : "text-gray-700"
+              }`}
+            />
+          </button>
+          <button
+            onClick={handleShare}
+            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all shadow-lg"
+          >
+            <Share className="w-5 h-5 text-gray-700" />
+          </button>
+          <button
+            onClick={handleClose}
+            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all shadow-lg"
+          >
+            <X className="w-5 h-5 text-gray-700" />
+          </button>
+        </div>
+      </div>
+
       {/* Desktop Layout */}
       <div className="hidden md:flex md:min-h-screen md:items-center">
         {/* Left side - Image */}
-        <div className="w-1/2 flex items-center justify-center p-12 ml-4">
+        <div className="w-1/2 flex items-center justify-center p-16 ml-12">
           <div className="relative">
             <Image
               src={icon.imageUrl}
@@ -77,7 +153,7 @@ export default function IconPage() {
         </div>
 
         {/* Right side - Content */}
-        <div className="w-1/2 flex flex-col justify-center px-12 py-16 mr-4">
+        <div className="w-1/2 flex flex-col justify-center px-16 py-16 mr-12">
           {/* Category Tags */}
           <div className="flex flex-wrap gap-2 mb-6">
             {icon.categories.map((category, index) => (
@@ -124,34 +200,35 @@ export default function IconPage() {
       <div className="md:hidden">
         {/* Mobile Header with Controls */}
         <div className="absolute top-4 right-4 z-10 flex gap-2">
-          <button className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                clipRule="evenodd"
-              />
-            </svg>
+          <button
+            onClick={handleNarrate}
+            className={`w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all ${
+              isNarrating ? "ring-2 ring-blue-500" : ""
+            }`}
+          >
+            <Volume2
+              className={`w-5 h-5 ${
+                isNarrating ? "text-blue-600" : "text-gray-700"
+              }`}
+            />
           </button>
-          <button className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-            </svg>
+          <button
+            onClick={handleShare}
+            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all"
+          >
+            <Share className="w-5 h-5 text-gray-700" />
           </button>
-          <button className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
+          <button
+            onClick={handleClose}
+            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all"
+          >
+            <X className="w-5 h-5 text-gray-700" />
           </button>
         </div>
 
         <div className="flex flex-col">
           {/* Mobile Image */}
-          <div className="flex items-center justify-center py-16 px-8">
+          <div className="flex items-center justify-center py-12 px-12">
             <Image
               src={icon.imageUrl}
               alt={icon.name}
@@ -164,7 +241,7 @@ export default function IconPage() {
           </div>
 
           {/* Mobile Content */}
-          <div className="px-6 pb-8">
+          <div className="px-8 pb-12">
             {/* Category Tags */}
             <div className="flex flex-wrap gap-2 mb-4">
               {icon.categories.map((category, index) => (
@@ -207,6 +284,23 @@ export default function IconPage() {
           </div>
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {showToast && (
+        <>
+          {/* Mobile Toast */}
+          <div className="md:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-3 bg-black text-white rounded-full shadow-lg transition-all duration-300">
+            <Check className="w-4 h-4 text-green-400" />
+            <span className="text-sm font-medium">{toastMessage}</span>
+          </div>
+
+          {/* Desktop Toast */}
+          <div className="hidden md:flex fixed top-20 right-4 z-50 items-center gap-2 px-4 py-3 bg-black text-white rounded-full shadow-lg transition-all duration-300">
+            <Check className="w-4 h-4 text-green-400" />
+            <span className="text-sm font-medium">{toastMessage}</span>
+          </div>
+        </>
+      )}
     </div>
   );
 }
