@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Download, ArrowLeft, Volume2, Share, X, Check } from "lucide-react";
@@ -33,13 +32,13 @@ export default function IconPage() {
           <p className="text-gray-600 mb-8">
             The icon you&apos;re looking for doesn&apos;t exist.
           </p>
-          <Link
-            href="/"
+          <button
+            onClick={() => (window.location.href = "/")}
             className="inline-flex items-center px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
-          </Link>
+          </button>
         </div>
       </div>
     );
@@ -82,7 +81,7 @@ export default function IconPage() {
       await navigator.clipboard.writeText(url);
       setToastMessage(
         window.innerWidth < 768
-          ? "Shared successfully!"
+          ? "URL copied to clipboard!"
           : "URL copied to clipboard!"
       );
       setShowToast(true);
@@ -110,27 +109,29 @@ export default function IconPage() {
         <div className="flex gap-2">
           <button
             onClick={handleNarrate}
-            className={`w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all shadow-lg ${
+            className={`w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-200 hover:bg-opacity-100 hover:shadow-md hover:ring-1 hover:ring-gray-300 transition-all duration-200 shadow-lg ${
               isNarrating ? "ring-2 ring-blue-500" : ""
             }`}
           >
             <Volume2
-              className={`w-5 h-5 ${
-                isNarrating ? "text-blue-600" : "text-gray-700"
+              className={`w-5 h-5 transition-colors duration-200 ${
+                isNarrating
+                  ? "text-blue-600"
+                  : "text-gray-700 hover:text-gray-800"
               }`}
             />
           </button>
           <button
             onClick={handleShare}
-            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all shadow-lg"
+            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-200 hover:bg-opacity-100 hover:shadow-md hover:ring-1 hover:ring-gray-300 transition-all duration-200 shadow-lg"
           >
-            <Share className="w-5 h-5 text-gray-700" />
+            <Share className="w-5 h-5 text-gray-700 hover:text-gray-800 transition-colors duration-200" />
           </button>
           <button
             onClick={handleClose}
-            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all shadow-lg"
+            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-200 hover:bg-opacity-100 hover:shadow-md hover:ring-1 hover:ring-gray-300 transition-all duration-200 shadow-lg"
           >
-            <X className="w-5 h-5 text-gray-700" />
+            <X className="w-5 h-5 text-gray-700 hover:text-gray-800 transition-colors duration-200" />
           </button>
         </div>
       </div>
@@ -178,13 +179,13 @@ export default function IconPage() {
 
           {/* Action Buttons */}
           <div className="flex gap-4">
-            <Link
-              href="/"
+            <button
+              onClick={handleClose}
               className="inline-flex items-center px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-medium"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Grid
-            </Link>
+            </button>
             <button
               onClick={handleDownload}
               className="inline-flex items-center px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-medium"
@@ -202,27 +203,29 @@ export default function IconPage() {
         <div className="absolute top-4 right-4 z-10 flex gap-2">
           <button
             onClick={handleNarrate}
-            className={`w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all ${
+            className={`w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-200 hover:bg-opacity-100 hover:shadow-md hover:ring-1 hover:ring-gray-300 transition-all duration-200 ${
               isNarrating ? "ring-2 ring-blue-500" : ""
             }`}
           >
             <Volume2
-              className={`w-5 h-5 ${
-                isNarrating ? "text-blue-600" : "text-gray-700"
+              className={`w-5 h-5 transition-colors duration-200 ${
+                isNarrating
+                  ? "text-blue-600"
+                  : "text-gray-700 hover:text-gray-800"
               }`}
             />
           </button>
           <button
             onClick={handleShare}
-            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all"
+            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-200 hover:bg-opacity-100 hover:shadow-md hover:ring-1 hover:ring-gray-300 transition-all duration-200"
           >
-            <Share className="w-5 h-5 text-gray-700" />
+            <Share className="w-5 h-5 text-gray-700 hover:text-gray-800 transition-colors duration-200" />
           </button>
           <button
             onClick={handleClose}
-            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all"
+            className="w-10 h-10 bg-white bg-opacity-80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-200 hover:bg-opacity-100 hover:shadow-md hover:ring-1 hover:ring-gray-300 transition-all duration-200"
           >
-            <X className="w-5 h-5 text-gray-700" />
+            <X className="w-5 h-5 text-gray-700 hover:text-gray-800 transition-colors duration-200" />
           </button>
         </div>
 
@@ -266,13 +269,13 @@ export default function IconPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-3">
-              <Link
-                href="/"
+              <button
+                onClick={handleClose}
                 className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-medium"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
-              </Link>
+              </button>
               <button
                 onClick={handleDownload}
                 className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-medium"
