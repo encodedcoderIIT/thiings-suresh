@@ -1,10 +1,10 @@
-# Thiings Icons - Website Replication
+# Thiings Suresh - Icon Collection
 
-A complete replication of the thiings.co website built with Next.js 15, TypeScript, and Tailwind CSS. This project provides an infinite scroll grid of icons with search and filtering capabilities, plus individual icon detail pages.
+A complete collection of beautiful 3D icons built with Next.js 15, TypeScript, and Tailwind CSS. This project provides an infinite scroll grid of icons with search and filtering capabilities, plus individual icon detail pages.
 
 ## 🚀 Features
 
-- **5,999 Icons**: Complete collection of Thiings icons with metadata
+- **7,000 Icons**: Complete collection of Thiings icons with metadata
 - **Infinite Scroll**: Performance-optimized grid with lazy loading
 - **Search & Filter**: Real-time search and category-based filtering
 - **Individual Icon Pages**: Detailed view for each icon with download functionality
@@ -66,7 +66,7 @@ interface ThiingsIcon {
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm/yarn/pnpm
 
 ### Installation
@@ -98,6 +98,7 @@ npm start
 ```
 
 **Features in Demo:**
+
 - ✅ Complete UI/UX
 - ✅ Search and filtering
 - ✅ Infinite scroll
@@ -116,9 +117,9 @@ For production with actual images:
 // next.config.js
 module.exports = {
   images: {
-    domains: ['your-cdn-domain.com'],
+    domains: ["your-cdn-domain.com"],
   },
-}
+};
 ```
 
 ### Option 3: Git LFS for Full Repository
@@ -200,6 +201,7 @@ This project is for educational purposes. Original Thiings icons are property of
 ## 📞 Support
 
 For questions or issues:
+
 - Open an issue on GitHub
 - Check the documentation
 - Review the code comments for implementation details
