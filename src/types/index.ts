@@ -4,4 +4,6 @@ export interface ThiingsIcon {
   description: string;
   categories: string[];
   imageUrl: string;
+  imageUrlGrid: string;
+  imageUrlPreview: string;
 }

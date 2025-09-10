@@ -18,9 +18,9 @@ export default function IconPage() {
   const [toastMessage, setToastMessage] = useState("");
 
   // Find the icon by ID
-  const icon = thiingsData.find((item) => item.id === iconId) as
-    | ThiingsIcon
-    | undefined;
+  const icon = (thiingsData as ThiingsIcon[]).find(
+    (item: ThiingsIcon) => item.id === iconId
+  );
 
   if (!icon) {
     return (
@@ -142,7 +142,7 @@ export default function IconPage() {
         <div className="w-1/2 flex items-center justify-center p-16 ml-12">
           <div className="relative">
             <Image
-              src={icon.imageUrl}
+              src={icon.imageUrlPreview || icon.imageUrl}
               alt={icon.name}
               width={500}
               height={500}
@@ -233,7 +233,7 @@ export default function IconPage() {
           {/* Mobile Image */}
           <div className="flex items-center justify-center py-12 px-12">
             <Image
-              src={icon.imageUrl}
+              src={icon.imageUrlPreview || icon.imageUrl}
               alt={icon.name}
               width={300}
               height={300}
