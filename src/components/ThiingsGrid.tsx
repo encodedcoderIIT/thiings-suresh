@@ -8,6 +8,7 @@ import React, {
   useEffect,
 } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Search, Download, Filter, X } from "lucide-react";
 import { ThiingsIcon } from "@/types";
 
@@ -113,11 +114,25 @@ export default function ThiingsGrid({ icons }: ThiingsGridProps) {
 
   // Handle direct download
   const handleDownload = useCallback(
-    (e: React.MouseEvent, icon: ThiingsIcon) => {
+    async (e: React.MouseEvent, icon: ThiingsIcon) => {
       e.preventDefault();
       e.stopPropagation();
-      // Demo version - images not included
-      alert(`This is a demo version. In the full version, "${icon.name}.png" would download automatically.`);
+
+      try {
+        const response = await fetch(icon.imageUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${icon.name}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Download failed:", error);
+        alert(`Failed to download "${icon.name}.png". Please try again.`);
+      }
     },
     []
   );
@@ -232,8 +247,15 @@ export default function ThiingsGrid({ icons }: ThiingsGridProps) {
               className="group relative bg-white rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 p-4 aspect-square flex flex-col items-center justify-center"
             >
               {/* Icon Image */}
-              <div className="relative w-16 h-16 mb-3 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
-                <div className="text-2xl">🖼️</div>
+              <div className="relative w-16 h-16 mb-3 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center overflow-hidden">
+                <Image
+                  src={icon.imageUrl}
+                  alt={icon.name}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain"
+                  loading="lazy"
+                />
               </div>
 
               {/* Icon Name */}

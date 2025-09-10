@@ -2,10 +2,11 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { Download, ArrowLeft, Copy, Check } from "lucide-react";
 import { ThiingsIcon } from "@/types";
-import thiingsData from "@/data/thiings_metadata.json";
+import thiingsData from "@/data/thiings_metadata_7000.json";
 import { useState } from "react";
 
 export default function IconPage() {
@@ -40,9 +41,22 @@ export default function IconPage() {
     );
   }
 
-  const handleDownload = () => {
-    // Demo version - images not included
-    alert("This is a demo version. In the full version, the PNG file would download automatically.");
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(icon.imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${icon.name}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert(`Failed to download "${icon.name}.png". Please try again.`);
+    }
   };
 
   const handleCopyName = async () => {
@@ -92,7 +106,14 @@ export default function IconPage() {
             <div className="flex flex-col items-center">
               <div className="w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center mb-6">
                 <div className="relative w-48 h-48 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
-                  <div className="text-6xl">🖼️</div>
+                  <Image
+                    src={icon.imageUrl}
+                    alt={icon.name}
+                    width={192}
+                    height={192}
+                    className="w-48 h-48 object-contain"
+                    unoptimized
+                  />
                 </div>
               </div>
 
@@ -171,7 +192,7 @@ export default function IconPage() {
                   <div className="flex justify-between">
                     <span>File name:</span>
                     <span className="font-medium font-mono text-xs">
-                      {icon.image}
+                      {icon.name}.png
                     </span>
                   </div>
                   <div className="flex justify-between">
